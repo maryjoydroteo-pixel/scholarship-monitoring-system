@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scholarship Monitoring System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <section id="authPage" class="auth-page">
+    <div class="auth-card">
+      <div class="brand">
+        <div class="brand-icon">🎓</div>
+        <div>
+          <h1>Scholarship Monitoring System</h1>
+          <p>Student Scholarship Monitoring and Academic Compliance</p>
+        </div>
+      </div>
+
+      <form id="loginForm" class="auth-form" onsubmit="login(event)">
+        <label>Email</label>
+        <input id="loginEmail" type="email" placeholder="Enter your email" required>
+        <label>Password</label>
+        <input id="loginPassword" type="password" placeholder="Enter your password" required>
+        <button class="primary-btn" type="submit">Login</button>
+        <p class="demo-note">Administrator access: admin@scholarship.com / admin123</p>
+      </form>
+    </div>
+  </section>
+
+  <section id="dashboardPage" class="app hidden">
+    <aside class="sidebar">
+      <div class="side-brand">
+        <span>🎓</span>
+        <strong>Scholarship<br>Monitoring</strong>
+      </div>
+      <nav>
+        <button class="nav-item active" onclick="showSection('dashboard', this)">📊 Dashboard</button>
+        <button class="nav-item" onclick="showSection('scholars', this)">👤 Scholars</button>
+        <button class="nav-item" onclick="showSection('programs', this)">🎓 Scholarship Programs</button>
+        <button class="nav-item" onclick="showSection('grades', this)">📝 Grade Submissions</button>
+        <button class="nav-item" onclick="showSection('compliance', this)">✅ Compliance</button>
+      </nav>
+      <button class="logout" onclick="logout()">↪ Logout</button>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p id="welcomeText">Monitor scholar records and academic compliance.</p>
+        </div>
+        <div class="user-chip"><span>●</span><span id="userName">User</span></div>
+      </header>
+
+      <section id="dashboardSection" class="content-section">
+        <div class="cards">
+          <div class="stat-card"><span>Total Scholars</span><strong id="totalScholars">0</strong></div>
+          <div class="stat-card"><span>Pending Submissions</span><strong id="pendingSubmissions">0</strong></div>
+          <div class="stat-card"><span>Verified Submissions</span><strong id="verifiedSubmissions">0</strong></div>
+          <div class="stat-card"><span>Compliant Scholars</span><strong id="compliantScholars">0</strong></div>
+          <div class="stat-card"><span>With Deficiency</span><strong id="deficiencyScholars">0</strong></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-heading">
+            <div>
+              <h3>System Overview</h3>
+              <p>Core workflow monitoring</p>
+            </div>
+          </div>
+          <div class="workflow">
+            <div>1. <b>Register Scholar</b><small>Create scholar record</small></div>
+            <div>2. <b>Submit Grades</b><small>Save as Pending</small></div>
+            <div>3. <b>Verify</b><small>Authorized verification</small></div>
+            <div>4. <b>Evaluate</b><small>Compliance result</small></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="scholarsSection" class="content-section hidden">
+        <div class="panel">
+          <div class="panel-heading">
+            <div><h3>Scholar Management</h3><p>Create, view, and manage scholar records.</p></div>
+            <button class="primary-btn small" onclick="openScholarForm()">+ Register Scholar</button>
+          </div>
+          <div id="scholarForm" class="form-grid hidden">
+            <input id="studentId" placeholder="Student ID" required>
+            <input id="scholarName" placeholder="Full Name" required>
+            <input id="degreeProgram" placeholder="Degree Program" required>
+            <input id="yearLevel" type="number" min="1" placeholder="Year Level" required>
+            <select id="scholarshipSelect"><option value="">Select Scholarship Program</option></select>
+            <select id="scholarStatus"><option>Active</option><option>Pending Submission</option></select>
+            <button class="primary-btn" onclick="addScholar()">Save Scholar</button>
+            <button class="secondary-btn" onclick="closeScholarForm()">Cancel</button>
+          </div>
+          <div class="table-wrap">
+            <table><thead><tr><th>Student ID</th><th>Name</th><th>Program</th><th>Year</th><th>Scholarship</th><th>Status</th></tr></thead>
+            <tbody id="scholarTable"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="programsSection" class="content-section hidden">
+        <div class="panel">
+          <div class="panel-heading">
+            <div><h3>Scholarship Programs</h3><p>View scholarship academic requirements.</p></div>
+          </div>
+          <div id="programCards" class="program-grid"></div>
+        </div>
+      </section>
+
+      <section id="gradesSection" class="content-section hidden">
+        <div class="panel">
+          <div class="panel-heading">
+            <div><h3>Grade Submissions</h3><p>Submit and verify semester academic records.</p></div>
+            <button class="primary-btn small" onclick="openGradeForm()">+ Submit Grades</button>
+          </div>
+          <div id="gradeForm" class="form-grid hidden">
+            <select id="gradeScholar"><option value="">Select Scholar</option></select>
+            <input id="academicYear" placeholder="Academic Year (e.g. 2026-2027)">
+            <select id="semester"><option>1st Semester</option><option>2nd Semester</option><option>Summer</option></select>
+            <input id="gwa" type="number" step="0.01" min="1" max="5" placeholder="GWA">
+            <input id="units" type="number" min="0" placeholder="Units Enrolled">
+            <input id="failed" type="number" min="0" placeholder="Failed Subjects">
+            <input id="incomplete" type="number" min="0" placeholder="Incomplete Subjects">
+            <button class="primary-btn" onclick="addGrade()">Save as Pending</button>
+            <button class="secondary-btn" onclick="closeGradeForm()">Cancel</button>
+          </div>
+          <div class="table-wrap">
+            <table><thead><tr><th>Scholar</th><th>Semester</th><th>GWA</th><th>Units</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="gradeTable"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="complianceSection" class="content-section hidden">
+        <div class="panel">
+          <div class="panel-heading">
+            <div><h3>Compliance Monitoring</h3><p>Results are based on the configured scholarship requirements.</p></div>
+          </div>
+          <div class="table-wrap">
+            <table><thead><tr><th>Scholar</th><th>Scholarship</th><th>Latest GWA</th><th>Units</th><th>Result</th></tr></thead>
+            <tbody id="complianceTable"></tbody></table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
